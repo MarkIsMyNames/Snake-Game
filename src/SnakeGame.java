@@ -7,9 +7,7 @@ import java.awt.event.ActionEvent;      // For handling action events like press
 import java.awt.event.ActionListener;   // Interface to listen for action events (e.g., button clicks)
 import java.awt.event.KeyAdapter;       // For detecting key presses to control the snake's movement
 import java.awt.event.KeyEvent;         // For key press events like moving the snake up, down, left, and right
-import javax.swing.JButton;             // For creating and handling the reset button in the UI
-import javax.swing.JPanel;              // For creating the main game panel where the game is rendered
-import javax.swing.Timer;               // For managing a timed game loop to update the game state (snake movement)
+import javax.swing.*;
 
 
 // The SnakeGame class extends JPanel to create a custom game panel for rendering the game
@@ -27,8 +25,8 @@ public class SnakeGame extends JPanel implements ActionListener {
     private static final int MAX_SNAKE_LENGTH = NUM_TILES_X * NUM_TILES_Y; // Maximum length of the snake (entire game area)
 
     private boolean isGameActive = false;               // Flag to check if the game is currently active
-    private int[] snakeXCoordinates = new int[MAX_SNAKE_LENGTH];  // Array to hold the X coordinates of each snake segment
-    private int[] snakeYCoordinates = new int[MAX_SNAKE_LENGTH];  // Array to hold the Y coordinates of each snake segment
+    private final int[] snakeXCoordinates = new int[MAX_SNAKE_LENGTH];  // Array to hold the X coordinates of each snake segment
+    private final int[] snakeYCoordinates = new int[MAX_SNAKE_LENGTH];  // Array to hold the Y coordinates of each snake segment
     private int snakeLength = INITIAL_SNAKE_LENGTH;    // Current length of the snake (starts at 5)
 
     private int foodXCoordinate;                        // X coordinate of the food
@@ -39,10 +37,15 @@ public class SnakeGame extends JPanel implements ActionListener {
     private long score = 0;                             // Current score of the player
 
     private Timer gameTimer;                            // Timer to control the game loop (update intervals)
-    private JButton resetButton;                        // Button to reset the game after a game over
+    private final JButton resetButton;                        // Button to reset the game after a game over
+
+
+    protected int lastSnakeXCoordinates;
+    protected int lastSnakeYCoordinates;
 
     // Constructor that sets up the game panel and the reset button
     public SnakeGame() {
+
         setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));  // Set the size of the game panel
         setBackground(Color.black);                            // Set the background color of the panel to black
         setFocusable(true);                                    // Make sure the panel can receive key events
@@ -52,12 +55,9 @@ public class SnakeGame extends JPanel implements ActionListener {
         resetButton.setFont(new Font("Helvetica", Font.BOLD, 20));  // Set the font size and style of the button text
         resetButton.setFocusable(false);                       // Ensure the button doesn't get focus (for key events)
         resetButton.setBounds(GAME_WIDTH / 2 - 100, 20, 200, 50);  // Position the button in the center horizontally, 20px from the top
-        resetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                if (!isGameActive) {
-                    startNewGame();  // Restart the game when the reset button is clicked
-                }
+        resetButton.addActionListener(event -> {        //lambda function
+            if (!isGameActive) {
+                startNewGame();  // Restart the game when the reset button is clicked
             }
         });
         add(resetButton);  // Add the reset button to the game panel
@@ -71,6 +71,10 @@ public class SnakeGame extends JPanel implements ActionListener {
         snakeLength = INITIAL_SNAKE_LENGTH;
         score = 0;
         isGameActive = true;
+
+        //Reset error handling movement variables
+        lastSnakeXCoordinates = 2147483647;
+        lastSnakeYCoordinates = 2147483647;
 
         // Reset movement flags (snake initially moves to the right)
         movingLeft = false;
@@ -160,6 +164,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         for (int i = snakeLength; i > 0; i--) {
             if (snakeXCoordinates[0] == snakeXCoordinates[i] && snakeYCoordinates[0] == snakeYCoordinates[i]) {
                 isGameActive = false;  // End the game if the snake collides with itself
+                break;
             }
         }
     }
@@ -216,37 +221,49 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     // Key input handler for controlling the snake's movement (up, down, left, right)
     private class KeyInputHandler extends KeyAdapter {
+
+        //initalize variables to prevent the player going in on itself
+        int lastSnakeXCoordinates = 2147483647;
+        int lastSnakeYCoordinates = 2147483647;
+
         @Override
         public void keyPressed(KeyEvent keyEvent) {
-            int keyPressed = keyEvent.getKeyCode();
+            int keyPressed = keyEvent.getKeyCode(); //get key pressed
 
-            // Prevent the snake from reversing direction (e.g., can't go left if moving right)
-            if (keyPressed == KeyEvent.VK_A || keyPressed == KeyEvent.VK_LEFT) {
-                if (!movingRight) {
-                    movingLeft = true;
-                    movingUp = false;
-                    movingDown = false;
+            // Prevents player from making the snake fold in on itself
+            if(lastSnakeXCoordinates != snakeXCoordinates[0] || lastSnakeYCoordinates != snakeYCoordinates[0] ) {
+
+                lastSnakeXCoordinates = snakeXCoordinates[0];
+                lastSnakeYCoordinates = snakeYCoordinates[0];
+
+                // Prevent the snake from reversing direction (e.g., can't go left if moving right)
+                if (keyPressed == KeyEvent.VK_A || keyPressed == KeyEvent.VK_LEFT) {
+                    if (!movingRight) {
+                        movingLeft = true;
+                        movingUp = false;
+                        movingDown = false;
+                    }
                 }
-            }
-            if (keyPressed == KeyEvent.VK_D || keyPressed == KeyEvent.VK_RIGHT) {
-                if (!movingLeft) {
-                    movingRight = true;
-                    movingUp = false;
-                    movingDown = false;
+                if (keyPressed == KeyEvent.VK_D || keyPressed == KeyEvent.VK_RIGHT) {
+                    if (!movingLeft) {
+                        movingRight = true;
+                        movingUp = false;
+                        movingDown = false;
+                    }
                 }
-            }
-            if (keyPressed == KeyEvent.VK_W || keyPressed == KeyEvent.VK_UP) {
-                if (!movingDown) {
-                    movingUp = true;
-                    movingRight = false;
-                    movingLeft = false;
+                if (keyPressed == KeyEvent.VK_W || keyPressed == KeyEvent.VK_UP) {
+                    if (!movingDown) {
+                        movingUp = true;
+                        movingRight = false;
+                        movingLeft = false;
+                    }
                 }
-            }
-            if (keyPressed == KeyEvent.VK_S || keyPressed == KeyEvent.VK_DOWN) {
-                if (!movingUp) {
-                    movingDown = true;
-                    movingRight = false;
-                    movingLeft = false;
+                if (keyPressed == KeyEvent.VK_S || keyPressed == KeyEvent.VK_DOWN) {
+                    if (!movingUp) {
+                        movingDown = true;
+                        movingRight = false;
+                        movingLeft = false;
+                    }
                 }
             }
         }
@@ -255,9 +272,9 @@ public class SnakeGame extends JPanel implements ActionListener {
     // Main method to start the game
     public static void main(String[] args) {
         SnakeGame game = new SnakeGame();
-        javax.swing.JFrame frame = new javax.swing.JFrame();
+        JFrame frame = new JFrame();
         frame.setTitle("Snake Game");                      // Set the window title
-        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE); // Close the window when exiting
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close the window when exiting
         frame.add(game);                                   // Add the game panel to the window
         frame.pack();                                      // Pack the window to its preferred size
         frame.setLocationRelativeTo(null);                 // Center the window on the screen

@@ -222,10 +222,6 @@ public class SnakeGame extends JPanel implements ActionListener {
     // Key input handler for controlling the snake's movement (up, down, left, right)
     private class KeyInputHandler extends KeyAdapter {
 
-        //initalize variables to prevent the player going in on itself
-        int lastSnakeXCoordinates = 2147483647;
-        int lastSnakeYCoordinates = 2147483647;
-
         @Override
         public void keyPressed(KeyEvent keyEvent) {
             int keyPressed = keyEvent.getKeyCode(); //get key pressed

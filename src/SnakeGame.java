@@ -9,7 +9,6 @@ import java.awt.event.KeyAdapter;       // For detecting key presses to control 
 import java.awt.event.KeyEvent;         // For key press events like moving the snake up, down, left, and right
 import javax.swing.*;
 
-
 // The SnakeGame class extends JPanel to create a custom game panel for rendering the game
 // and implements ActionListener to handle time-based events (like updating the game state on each timer tick).
 public class SnakeGame extends JPanel implements ActionListener {
@@ -38,7 +37,6 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     private Timer gameTimer;                            // Timer to control the game loop (update intervals)
     private final JButton resetButton;                        // Button to reset the game after a game over
-
 
     protected int lastSnakeXCoordinates;
     protected int lastSnakeYCoordinates;
@@ -83,9 +81,9 @@ public class SnakeGame extends JPanel implements ActionListener {
         movingDown = false;
 
         // Set the snake's initial position (starting from the middle of the screen)
-        for (int i = 0; i < snakeLength; i++) {
-            snakeXCoordinates[i] = NUM_TILES_X / 2 - i;  // Starting X position
-            snakeYCoordinates[i] = NUM_TILES_Y / 2;      // Starting Y position
+        for (int initalPartLocation = 0; initalPartLocation < snakeLength; initalPartLocation++) {
+            snakeXCoordinates[initalPartLocation] = NUM_TILES_X / 2 - initalPartLocation;  // Starting X position
+            snakeYCoordinates[initalPartLocation] = NUM_TILES_Y / 2;      // Starting Y position
         }
 
         spawnFood();  // Place the food at a random location on the grid
@@ -115,9 +113,9 @@ public class SnakeGame extends JPanel implements ActionListener {
     // Method to update the snake's position and check if it eats the food
     private void moveSnake() {
         // Move the body of the snake by shifting each segment to the position of the segment in front of it
-        for (int i = snakeLength; i > 0; i--) {
-            snakeXCoordinates[i] = snakeXCoordinates[i - 1];
-            snakeYCoordinates[i] = snakeYCoordinates[i - 1];
+        for (int moveEachPart = snakeLength; moveEachPart > 0; moveEachPart--) {
+            snakeXCoordinates[moveEachPart] = snakeXCoordinates[moveEachPart - 1];
+            snakeYCoordinates[moveEachPart] = snakeYCoordinates[moveEachPart - 1];
         }
 
         // Move the snake's head in the direction it's facing
@@ -161,8 +159,8 @@ public class SnakeGame extends JPanel implements ActionListener {
         }
 
         // Check if the snake collides with itself (game over)
-        for (int i = snakeLength; i > 0; i--) {
-            if (snakeXCoordinates[0] == snakeXCoordinates[i] && snakeYCoordinates[0] == snakeYCoordinates[i]) {
+        for (int snakePiece = snakeLength; snakePiece > 0; snakePiece--) {
+            if (snakeXCoordinates[0] == snakeXCoordinates[snakePiece] && snakeYCoordinates[0] == snakeYCoordinates[snakePiece]) {
                 isGameActive = false;  // End the game if the snake collides with itself
                 break;
             }
@@ -177,8 +175,8 @@ public class SnakeGame extends JPanel implements ActionListener {
         if (isGameActive) {
             // Draw the snake
             graphicsContext.setColor(Color.green); // Set the snake color to green
-            for (int i = 0; i < snakeLength; i++) {
-                graphicsContext.fillRect(snakeXCoordinates[i] * TILE_SIZE, snakeYCoordinates[i] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            for (int snakePiece = 0; snakePiece < snakeLength; snakePiece++) {
+                graphicsContext.fillRect(snakeXCoordinates[snakePiece] * TILE_SIZE, snakeYCoordinates[snakePiece] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
 
             // Draw the food
@@ -191,6 +189,10 @@ public class SnakeGame extends JPanel implements ActionListener {
             // Display the "Game Over" message and final score
             displayGameOver(graphicsContext);
         }
+
+        // Draw the gray border around the game
+        graphicsContext.setColor(Color.GRAY); // Set the border color to gray
+        graphicsContext.drawRect(0, 0, GAME_WIDTH - 1, GAME_HEIGHT - 1);  // Draw the border around the game
     }
 
     // Method to display the score at the top of the screen
@@ -266,6 +268,18 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     // Main method to start the game
+    public static void start(){
+        SnakeGame game = new SnakeGame();
+        JFrame frame = new JFrame();
+        frame.setTitle("Snake Game");                      // Set the window title
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close the window when exiting
+        frame.add(game);                                   // Add the game panel to the window
+        frame.pack();                                      // Pack the window to its preferred size
+        frame.setLocationRelativeTo(null);                 // Center the window on the screen
+        frame.setVisible(true);                            // Make the window visible
+    }
+
+    // Main method to start the game in case the detection breaks
     public static void main(String[] args) {
         SnakeGame game = new SnakeGame();
         JFrame frame = new JFrame();

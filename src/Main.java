@@ -28,11 +28,7 @@ public class Main {
 
         // Repeating the tcpdump process infinitely
         while (true) {
-            try {
-                runTcpdump();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            runTcpdump();
         }
     }
 
@@ -81,7 +77,7 @@ public class Main {
     }
 
     //Checks if it is safe to run the domain checker
-    private static void domainRunningChecker() throws IOException {
+    private static void domainRunningChecker() {
 
         //checks if the os is linux
         if(!System.getProperty("os.name").equals("Linux")){

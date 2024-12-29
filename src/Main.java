@@ -100,7 +100,12 @@ public class Main {
                 throw new RuntimeException();
             }
 
-        } catch (RuntimeException e) {
+        } catch(IOException e){
+            System.err.println("This detection doesn't work with Flatpaks");
+            SnakeGame.start();
+            throw new RuntimeException();//stops the game from launching multiple times
+
+        }catch (RuntimeException e) {
             System.err.println("This detection must be run with sudo");
             SnakeGame.start();
             throw new RuntimeException();//stops the game from launching multiple times

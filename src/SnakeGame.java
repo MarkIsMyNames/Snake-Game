@@ -9,8 +9,6 @@ import java.awt.event.KeyAdapter;       // For detecting key presses to control 
 import java.awt.event.KeyEvent;         // For key press events like moving the snake up, down, left, and right
 import javax.swing.*;
 
-// The SnakeGame class extends JPanel to create a custom game panel for rendering the game
-// and implements ActionListener to handle time-based events (like updating the game state on each timer tick).
 public class SnakeGame extends JPanel implements ActionListener {
 
     // Constants for the game dimensions and setup
@@ -41,8 +39,11 @@ public class SnakeGame extends JPanel implements ActionListener {
     protected int lastSnakeXCoordinates;
     protected int lastSnakeYCoordinates;
 
+    private static JFrame gameFrame;  // Reference to the JFrame that holds the game
+
     // Constructor that sets up the game panel and the reset button
-    public SnakeGame() {
+    public SnakeGame(JFrame frame) {
+        gameFrame = frame;  // Set the frame reference
 
         setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));  // Set the size of the game panel
         setBackground(Color.black);                            // Set the background color of the panel to black
@@ -143,8 +144,8 @@ public class SnakeGame extends JPanel implements ActionListener {
 
     // Method to check if the food is on the snake's body (if so, regenerate the food)
     private boolean isFoodOnSnake(int foodX, int foodY) {
-        for (int i = 0; i < snakeLength; i++) {
-            if (snakeXCoordinates[i] == foodX && snakeYCoordinates[i] == foodY) {
+        for (int checkEachSnakePiece = 0; checkEachSnakePiece < snakeLength; checkEachSnakePiece++) {
+            if (snakeXCoordinates[checkEachSnakePiece] == foodX && snakeYCoordinates[checkEachSnakePiece] == foodY) {
                 return true;  // Food is on the snake's body, so it must be regenerated
             }
         }
@@ -229,7 +230,7 @@ public class SnakeGame extends JPanel implements ActionListener {
             int keyPressed = keyEvent.getKeyCode(); //get key pressed
 
             // Prevents player from making the snake fold in on itself
-            if(lastSnakeXCoordinates != snakeXCoordinates[0] || lastSnakeYCoordinates != snakeYCoordinates[0] ) {
+            if(lastSnakeXCoordinates != snakeXCoordinates[0] || lastSnakeYCoordinates != snakeYCoordinates[0]) {
 
                 lastSnakeXCoordinates = snakeXCoordinates[0];
                 lastSnakeYCoordinates = snakeYCoordinates[0];
@@ -267,10 +268,20 @@ public class SnakeGame extends JPanel implements ActionListener {
         }
     }
 
+    // New method to close the game
+    public static void closeGame() {
+        gameFrame.dispose(); // This will close the JFrame and the game
+    }
+
     // Main method to start the game
-    public static void start(){
-        SnakeGame game = new SnakeGame();
+    public static void start() {
+        // Create a new JFrame (the window) to hold the game panel
         JFrame frame = new JFrame();
+
+        // Instantiate the SnakeGame class, passing the created JFrame to the constructor
+        // The SnakeGame constructor needs the JFrame reference to add the game panel to the window
+        SnakeGame game = new SnakeGame(frame);
+
         frame.setTitle("Snake Game");                      // Set the window title
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close the window when exiting
         frame.add(game);                                   // Add the game panel to the window
@@ -279,15 +290,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         frame.setVisible(true);                            // Make the window visible
     }
 
-    // Main method to start the game in case the detection breaks
     public static void main(String[] args) {
-        SnakeGame game = new SnakeGame();
-        JFrame frame = new JFrame();
-        frame.setTitle("Snake Game");                      // Set the window title
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close the window when exiting
-        frame.add(game);                                   // Add the game panel to the window
-        frame.pack();                                      // Pack the window to its preferred size
-        frame.setLocationRelativeTo(null);                 // Center the window on the screen
-        frame.setVisible(true);                            // Make the window visible
+        start(); // Call to start method
     }
 }

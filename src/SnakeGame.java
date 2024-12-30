@@ -54,7 +54,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         resetButton.setFont(new Font("Helvetica", Font.BOLD, 20));  // Set the font size and style of the button text
         resetButton.setFocusable(false);                       // Ensure the button doesn't get focus (for key events)
         resetButton.setBounds(GAME_WIDTH / 2 - 100, 20, 200, 50);  // Position the button in the center horizontally, 20px from the top
-        resetButton.addActionListener(event -> {        //lambda function
+        resetButton.addActionListener(event -> {        //lambda expression
             if (!isGameActive) {
                 startNewGame();  // Restart the game when the reset button is clicked
             }

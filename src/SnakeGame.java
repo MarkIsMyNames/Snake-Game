@@ -12,9 +12,9 @@ import javax.swing.*;
 public class SnakeGame extends JPanel implements ActionListener {
 
     // Constants for the game dimensions and setup
-    private static final int TILE_SIZE = 30;           // Size of each square tile (used for snake and food)
-    private static final int GAME_WIDTH = 800;          // Width of the game panel (in pixels)
-    private static final int GAME_HEIGHT = 600;         // Height of the game panel (in pixels)
+    private static final int TILE_SIZE = 40;           // Size of each square tile (used for snake and food)
+    private static final int GAME_WIDTH = 1280;          // Width of the game panel (in pixels)
+    private static final int GAME_HEIGHT = 960;         // Height of the game panel (in pixels)
     private static final int NUM_TILES_X = GAME_WIDTH / TILE_SIZE;  // Number of tiles in the X direction
     private static final int NUM_TILES_Y = GAME_HEIGHT / TILE_SIZE; // Number of tiles in the Y direction
 
@@ -51,9 +51,8 @@ public class SnakeGame extends JPanel implements ActionListener {
         addKeyListener(new KeyInputHandler());                 // Add the key listener for controlling the snake
 
         resetButton = new JButton("Reset Game");              // Create a new button for resetting the game
-        resetButton.setFont(new Font("Helvetica", Font.BOLD, 20));  // Set the font size and style of the button text
+        resetButton.setFont(new Font("Helvetica", Font.BOLD, 40));  // Set the font size and style of the button text
         resetButton.setFocusable(false);                       // Ensure the button doesn't get focus (for key events)
-        resetButton.setBounds(GAME_WIDTH / 2 - 100, 20, 200, 50);  // Position the button in the center horizontally, 20px from the top
         resetButton.addActionListener(event -> {        //lambda expression
             if (!isGameActive) {
                 startNewGame();  // Restart the game when the reset button is clicked

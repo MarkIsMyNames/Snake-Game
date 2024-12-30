@@ -1,14 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.Set;
-
 public class Main {
-
-    // Set of domains to check
-    // Use a hashset in case I need to add more domains in the future
-    private static final Set<String> targetDomains = new HashSet<>();
 
     // Flag to ensure "no" is printed only once
     private static boolean printedNo = false;
@@ -19,11 +12,6 @@ public class Main {
 
         //Checks to see if the domain checker can run
         domainRunningChecker();
-
-        // Domains used for waiting on a meeting
-        // This could change but currently works as of 29/12/24;
-        targetDomains.add(".relay.teams.microsoft.com");
-
 
         // Repeating the tcpdump process infinitely
         while (true) {
@@ -44,11 +32,9 @@ public class Main {
         while ((domainLine = readTcpdump.readLine()) != null) {
 
             // Check if line contains a DNS query for one of the target domains
-            if (!printedNo) {
-                if (containsTargetDomain(domainLine)) {
-                    printedNo = true; // Ensure it only runs once
-                    SnakeGame.start();
-                }
+            if (!printedNo && domainLine.contains(".relay.teams.microsoft.com")) {
+                printedNo = true; // Ensure it only runs once
+                SnakeGame.start();
             }
 
             // Domain to see if you have been let into a meeting
@@ -59,16 +45,6 @@ public class Main {
                 printedNo = false;
             }
         }
-    }
-
-    // Method to check if the line contains a target domain (google.com or example.com)
-    private static boolean containsTargetDomain(String domainLine) {
-        for (String domain : targetDomains) {
-            if (domainLine.contains(domain)) {
-                return true;  // Domain found in the line
-            }
-        }
-        return false;
     }
 
     //Checks if it is safe to run the domain checker

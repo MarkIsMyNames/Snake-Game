@@ -269,7 +269,7 @@ public class SnakeGame extends JPanel implements ActionListener {
     }
 
     // New method to close the game
-    public static void closeGame() {
+    public static void end() {
         gameFrame.dispose(); // This will close the JFrame and the game
     }
 

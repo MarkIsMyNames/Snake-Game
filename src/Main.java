@@ -59,7 +59,7 @@ public class Main {
             // This could change but currently works as of 29/12/24
             // This exits the application once you are connect to your meeting
             if(domainLine.contains("emea.pptservicescast.officeapps.live.com")){
-                SnakeGame.closeGame();//Calls the method to end the game
+                SnakeGame.end();//Calls the method to end the game
                 printedNo = false;
             }
         }

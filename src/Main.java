@@ -60,6 +60,7 @@ public class Main {
             // This exits the application once you are connect to your meeting
             if(domainLine.contains("emea.pptservicescast.officeapps.live.com")){
                 SnakeGame.closeGame();//Calls the method to end the game
+                printedNo = false;
             }
         }
     }
@@ -67,8 +68,6 @@ public class Main {
     // Method to check if the line contains a target domain (google.com or example.com)
     private static boolean containsTargetDomain(String domainLine) {
         for (String domain : targetDomains) {
-
-
             if (domainLine.contains(domain)) {
                 return true;  // Domain found in the line
             }

@@ -21,8 +21,7 @@ public class Main {
         domainRunningChecker();
 
         // Domains used for waiting on a meeting
-        // This could change but currently works as of 29/12/24
-        targetDomains.add(".cloudapp.azure.com");
+        // This could change but currently works as of 29/12/24;
         targetDomains.add(".relay.teams.microsoft.com");
 
 
@@ -34,11 +33,8 @@ public class Main {
 
     private static void runTcpdump() throws IOException {
 
-        // Create the process to run the tcpdump command
-        ProcessBuilder createTcpdump = new ProcessBuilder("sudo tcpdump -i any port 53"); // May need to run as a root user
-
-        // Start the process
-        Process runTcpdump = createTcpdump.start();
+        // Start the process tcpdump
+        Process runTcpdump = Runtime.getRuntime().exec("sudo tcpdump -i any port 53");// May need to run as a root user
 
         // Get the output from the process
         BufferedReader readTcpdump = new BufferedReader(new InputStreamReader(runTcpdump.getInputStream()));

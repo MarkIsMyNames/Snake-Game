@@ -21,7 +21,7 @@ public class Main {
 
     private static void runTcpdump() throws IOException {
 
-        // Start the process tcpdump
+        // Star runTcpdump();t the process tcpdump
         Process runTcpdump = Runtime.getRuntime().exec("sudo tcpdump -i any port 53"); // May need to run as a root user
 
         // Get the output from the process

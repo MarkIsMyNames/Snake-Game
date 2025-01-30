@@ -36,8 +36,8 @@ public class SnakeGame extends JPanel implements ActionListener {
     private Timer gameTimer;                            // Timer to control the game loop (update intervals)
     private final JButton resetButton;                        // Button to reset the game after a game over
 
-    protected int lastSnakeXCoordinates;
-    protected int lastSnakeYCoordinates;
+    private int lastSnakeXCoordinates;
+    private int lastSnakeYCoordinates;
 
     private static JFrame gameFrame;  // Reference to the JFrame that holds the game
 
@@ -267,7 +267,7 @@ public class SnakeGame extends JPanel implements ActionListener {
         }
     }
 
-    // New method to close the game
+    // Method to close the game
     public static void end() {
         gameFrame.dispose(); // This will close the JFrame and the game
     }
